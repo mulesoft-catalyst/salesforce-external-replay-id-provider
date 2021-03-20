@@ -1,0 +1,51 @@
+<mule xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:custom-properties-provider="http://www.mulesoft.org/schema/mule/custom-properties-provider"
+	xmlns:salesforce-replayid-property-provider="http://www.mulesoft.org/schema/mule/salesforce-replayid-property-provider" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/salesforce-replayid-property-provider http://www.mulesoft.org/schema/mule/salesforce-replayid-property-provider/current/mule-salesforce-replayid-property-provider.xsd
+          http://www.mulesoft.org/schema/mule/custom-properties-provider http://www.mulesoft.org/schema/mule/custom-properties-provider/current/mule-custom-properties-provider.xsd">
+
+
+	<!--  Original test config -->
+	<!-- <custom-properties-provider:config name="config" providerEndPointURL="http://localhost:8081/pull" 
+		clientId="myCustomParameter" clientSecret="myCustomParameter" isExternalProvider="true" 
+		/> -->
+
+<!-- https://anypoint.mulesoft.com/mocking/api/v1/links/5f8ab961-e337-4230-a202-cc5726dc865a/replayId/ -->
+
+
+
+<configuration-properties doc:name="Configuration properties" doc:id="da4e90db-4698-44a9-bd70-03cb6770e45e" file="config.yaml" />
+	
+	<salesforce-replayid-property-provider:config name="config" configFileName="config_${env}.yaml" >
+	</salesforce-replayid-property-provider:config>
+	
+	
+	<!-- <salesforce-replayid-property-provider:config name="config">
+	
+		<salesforce-replayid-property-provider:salesforce-replayid configFileName="config.yaml"  />
+		
+	</salesforce-replayid-property-provider:config> -->
+	
+
+
+	
+	
+
+
+	<object name="testObject"
+		class="com.mulesoft.external.provider.TestObject">
+		<property key="valueFromProperty"
+			value="${custom::SFDC.replayid}" />
+	</object>
+	
+	<object name="propertyTestObject"
+		class="com.mulesoft.external.provider.TestObject">
+		<property key="valueFromProperty"
+			value="${replayIdProvider.url}" />
+	</object>
+	
+	
+
+</mule>
