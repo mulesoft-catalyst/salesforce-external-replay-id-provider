@@ -4,10 +4,10 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.rayarnado.mulesoft.module</groupId>
 <!--
- 	<groupId>${organizationId}</groupId>
+	<groupId>com.rayarnado.poc.module</groupId>
  -->
+ 	<groupId>${organizationId}</groupId>
  	<artifactId>salesforce-replay-id-external-provider</artifactId>
 	<version>0.0.1</version>
 	<packaging>mule-extension</packaging>
