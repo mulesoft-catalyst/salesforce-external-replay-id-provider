@@ -120,10 +120,8 @@ public class ExternalConfigurationPropertiesProvider implements ConfigurationPro
 			connection.setRequestMethod(Constants.HTTP_METHOD_GET);
 			connection.setConnectTimeout(30000);
 			connection.setReadTimeout(30000);
-
 			connection.setRequestProperty(Constants.HEADER_CLIENT_ID, clientId);
 			connection.setRequestProperty(Constants.HEADER_CLIENT_SECRET, clientSecret);
-
 			int responseCode = connection.getResponseCode();
 			logger.debug("Response Code::" + responseCode);
 
@@ -142,11 +140,32 @@ public class ExternalConfigurationPropertiesProvider implements ConfigurationPro
 
 					if (entry.getValue() != null && (entry.getValue() instanceof LinkedHashMap)) {
 						LinkedHashMap<String, Object> lhm = (LinkedHashMap) entry.getValue();
-						if (lhm.get(Constants.KEY_REPLAY_ID) != null) {
-							Double d = (Double) lhm.get(Constants.KEY_REPLAY_ID);
-							lastReplayId = String.valueOf(((Double) lhm.get(Constants.KEY_REPLAY_ID)).intValue());
+						if (lhm.get(Constants.KEY_REPLAY_ID_1) != null) {
+							Double d = (Double) lhm.get(Constants.KEY_REPLAY_ID_1);
+							lastReplayId = String.valueOf(((Double) lhm.get(Constants.KEY_REPLAY_ID_1)).intValue());
+							break;
+						}else if (lhm.get(Constants.KEY_REPLAY_ID_2) != null) {
+							Double d = (Double) lhm.get(Constants.KEY_REPLAY_ID_2);
+							lastReplayId = String.valueOf(((Double) lhm.get(Constants.KEY_REPLAY_ID_2)).intValue());
+							break;
+						}else if (lhm.get(Constants.KEY_REPLAY_ID_3) != null) {
+							Double d = (Double) lhm.get(Constants.KEY_REPLAY_ID_3);
+							lastReplayId = String.valueOf(((Double) lhm.get(Constants.KEY_REPLAY_ID_3)).intValue());
+							break;
+						}else if (lhm.get(Constants.KEY_REPLAY_ID_4) != null) {
+							Double d = (Double) lhm.get(Constants.KEY_REPLAY_ID_4);
+							lastReplayId = String.valueOf(((Double) lhm.get(Constants.KEY_REPLAY_ID_4)).intValue());
+							break;
+						}else if (lhm.get(Constants.KEY_REPLAY_ID_5) != null) {
+							Double d = (Double) lhm.get(Constants.KEY_REPLAY_ID_5);
+							lastReplayId = String.valueOf(((Double) lhm.get(Constants.KEY_REPLAY_ID_5)).intValue());
+							break;
+						}else if (lhm.get(Constants.KEY_REPLAY_ID_6) != null) {
+							Double d = (Double) lhm.get(Constants.KEY_REPLAY_ID_6);
+							lastReplayId = String.valueOf(((Double) lhm.get(Constants.KEY_REPLAY_ID_6)).intValue());
 							break;
 						}
+
 					}
 
 				}
@@ -154,11 +173,11 @@ public class ExternalConfigurationPropertiesProvider implements ConfigurationPro
 			}
 
 		} catch (MalformedURLException e) {
-			logger.error("Error occured during key lookup using custom property provider" + e.getMessage());
+			logger.error("HTTP_ERROR:" + e.getMessage());
 		} catch (IOException e) {
-			logger.error("Error occured during key lookup using custom property provider" + e.getMessage());
+			logger.error("HTTP_ERROR:" + e.getMessage());
 		} catch (Exception e) {
-			logger.error("Error occured during key lookup using custom property provider" + e.getMessage());
+			logger.error("HTTP_ERROR:" + e.getMessage());
 		} finally {
 			connection.disconnect();
 		}

@@ -26,7 +26,13 @@ public interface Constants {
 	
 	public static final String FILE_EXTENSION_YAML = ".yaml";
 	
-	public static final String KEY_REPLAY_ID = "replayid";
+	public static final String KEY_REPLAY_ID_1 = "last-replay-id";
+	public static final String KEY_REPLAY_ID_2 = "replay-id";
+	public static final String KEY_REPLAY_ID_3 = "replayId";
+	public static final String KEY_REPLAY_ID_4 = "lastReplayId";
+	public static final String KEY_REPLAY_ID_5 = "REPLAY_ID";
+	public static final String KEY_REPLAY_ID_6 = "LAST_REPLAY_ID";
+
 	
 	
 	
