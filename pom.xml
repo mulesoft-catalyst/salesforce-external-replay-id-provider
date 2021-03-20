@@ -6,15 +6,14 @@
 	<modelVersion>4.0.0</modelVersion>
 	<!-- <groupId>d69a8321-0b27-4f3f-8456-62674e901c67</groupId> -->
 	<groupId>com.rayarnado.mulesoft.module</groupId>
-	<!-- <groupId>com.nyc.custom.provider</groupId> -->
-	<artifactId>salesforce-replayid-external-providers-module</artifactId>
-	<version>1.0.0</version>
+	<artifactId>salesforce-replay-id-external-provider</artifactId>
+	<version>0.0.0</version>
 	<packaging>mule-extension</packaging>
-	<name>salesforce-replayid-external-provider</name>
+	<name>salesforce-replay-id-external-provider</name>
 
 	<parent>
 		<groupId>org.mule.extensions</groupId>
-		<artifactId>mule-modules-parent</artifactId>
+		<artifactId>mule-modules-parent</artifactId> 
 		<version>1.3.0</version> <!-- MuleRuntime 4.3 -->
 	</parent>
 	<properties>

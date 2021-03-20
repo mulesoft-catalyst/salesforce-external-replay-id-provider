@@ -18,111 +18,115 @@ import org.mule.runtime.config.api.dsl.model.properties.ConfigurationProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//import org.mule.runtime.core.api.context.MuleContextAware;
-
-import org.springframework.beans.factory.annotation.Value;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mulesoft.external.provider.common.Constants;
-
-import shapeless.TypeOf;
 
 public class ExternalConfigurationPropertiesProvider implements ConfigurationPropertiesProvider {
 
 	private String providerEndpointUrl = "";
 	private String clientId = "";
 	private String clientSecret = "";
-	private boolean continueOnError = false;
+	private String defaultReplayId = "";
+	private boolean ignoreError = false;
 	private int count = 0;
 
 	public final Logger logger = LoggerFactory.getLogger(ExternalConfigurationPropertiesProvider.class);
 
-
-
-	public ExternalConfigurationPropertiesProvider(String endPointURL, String clientId, String clientSecret, boolean continueOnError) {
+	public ExternalConfigurationPropertiesProvider(String endPointURL, String clientId, String clientSecret,
+			String defaultReplayId,boolean ignoreError) {
 		this.providerEndpointUrl = endPointURL;
 		this.clientId = clientId;
 		this.clientSecret = clientSecret;
-		this.continueOnError = continueOnError;
+		this.ignoreError = ignoreError;
+		this.defaultReplayId = defaultReplayId;
 
 	}
 
 	@Override
 	public Optional<ConfigurationProperty> getConfigurationProperty(String configurationAttributeKey) {
-		boolean lookupError = false; // If Key not found then throw exception
-		
-		logger.debug("Entering >> getConfigurationProperty Key = " + configurationAttributeKey);
 		Optional<ConfigurationProperty> configProperty = Optional.empty();
 
-		
 		if (configurationAttributeKey.startsWith(Constants.CUSTOM_PROPERTIES_PREFIX)) {
 			String effectiveKey = configurationAttributeKey.substring(Constants.CUSTOM_PROPERTIES_PREFIX.length());
 
-			if (effectiveKey.equals(Constants.KEY_SFDC_REPLY_ID)) {
-				String replyID = retrieveDataFromSalesforce(providerEndpointUrl, clientId, clientSecret,
+			if (effectiveKey.equals(Constants.KEY_SFDC_REPLAY_ID)) {
+
+				String lastReplayId = getLastReplayIdFromExternalSource(providerEndpointUrl, clientId, clientSecret,
 						configurationAttributeKey, count++);
-				
-				logger.info("Replay ID from Config Property Provider ="+replyID);
-				
-				if(!continueOnError && (replyID == null || replyID.trim().length() ==0)) {
-					logger.error("Unable to retrieve ReplyID for "+ configurationAttributeKey + " from the property store: " + providerEndpointUrl + ". Please check your configuration and try again.");
-					configProperty = null;
-				} else {
+				logger.debug("Replay ID from External Source: [" + lastReplayId + "]");
+				if (!ignoreError && (lastReplayId == null || lastReplayId.trim().length() == 0)) {
+					logger.error(
+							"External Source Configuration: Replay ID can't be loaded for ${" + configurationAttributeKey + "} from the property external source [ "
+									+ providerEndpointUrl + "]. Please check your connection and try again.");
+					logger.debug("External Source: No Replay ID provided setting to default_replay_id : [" + lastReplayId +"]");
+					
 					configProperty = Optional.of(new ConfigurationProperty() {
 
 						@Override
 						public Object getSource() {
-							return "Custom Provider Source";
+							return "External Configuration Provider";
 						}
-						
-						// Below method get invoked 2 times for each property look, potentially it could be a bug
+
 						@Override
 						public Object getRawValue() {
-							return replyID;
+							if (defaultReplayId !=null && defaultReplayId.trim().length() != 0)
+								return defaultReplayId;
+							else
+								return "-1";
 						}
 
 						@Override
 						public String getKey() {
-							return Constants.KEY_SFDC_REPLY_ID;
+							return Constants.KEY_SFDC_REPLAY_ID;
+						}
+					});
+				} else {
+					logger.debug("External Source: Found Replay ID provided: [" + lastReplayId +"]");
+					configProperty = Optional.of(new ConfigurationProperty() {
+
+						@Override
+						public Object getSource() {
+							return "External Configuration Provider";
+						}
+
+						@Override
+						public Object getRawValue() {
+							return lastReplayId;
+						}
+
+						@Override
+						public String getKey() {
+							return Constants.KEY_SFDC_REPLAY_ID;
 						}
 					});
 				}
-				
-			} // End of effective Key check if Block
-		}// end of configurationAttributeKey if block
-		
-		logger.debug("Exiting >> retrieveDataFromRedis = " + configProperty);
+
+			}
+		}
 
 		return configProperty;
 	}
 
-	private String retrieveDataFromSalesforce(String endPointURL, String clientId, String clientSecret,
-			String configurationAttributeKey, int count)  {
-		
-		logger.debug("Entering>> retrieveDataFromRedis");
-		
-		
+	private String getLastReplayIdFromExternalSource(String url, String clientId, String clientSecret,
+			String configurationAttributeKey, int count) {
 		
 		StringBuffer response = new StringBuffer();
 		HttpURLConnection connection = null;
-
-		String replayId = "";
+		String lastReplayId = "";
 		try {
 
-			
-			URL redisEndPointUrl = new URL(endPointURL);
-			connection = (HttpURLConnection) redisEndPointUrl.openConnection();
+			URL http = new URL(url);
+			connection = (HttpURLConnection) http.openConnection();
 			connection.setRequestMethod(Constants.HTTP_METHOD_GET);
 			connection.setConnectTimeout(30000);
 			connection.setReadTimeout(30000);
 
 			connection.setRequestProperty(Constants.HEADER_CLIENT_ID, clientId);
 			connection.setRequestProperty(Constants.HEADER_CLIENT_SECRET, clientSecret);
-			
+
 			int responseCode = connection.getResponseCode();
 			logger.debug("Response Code::" + responseCode);
-			
-			
+
 			if (responseCode == HttpURLConnection.HTTP_OK) {
 				String readLine = "";
 				BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
@@ -131,18 +135,16 @@ public class ExternalConfigurationPropertiesProvider implements ConfigurationPro
 					response.append(readLine);
 				}
 				in.close();
-				
+
 				ObjectMapper mapper = new ObjectMapper();
 				Map<String, Object> map = mapper.readValue(response.toString(), Map.class);
 				for (Map.Entry<String, Object> entry : map.entrySet()) {
-					
-					
-					if (entry.getValue() != null && (entry.getValue() instanceof  LinkedHashMap ) ) {
+
+					if (entry.getValue() != null && (entry.getValue() instanceof LinkedHashMap)) {
 						LinkedHashMap<String, Object> lhm = (LinkedHashMap) entry.getValue();
 						if (lhm.get(Constants.KEY_REPLAY_ID) != null) {
 							Double d = (Double) lhm.get(Constants.KEY_REPLAY_ID);
-							replayId = String.valueOf(((Double) lhm.get(Constants.KEY_REPLAY_ID)).intValue());
-//							logger.debug();
+							lastReplayId = String.valueOf(((Double) lhm.get(Constants.KEY_REPLAY_ID)).intValue());
 							break;
 						}
 					}
@@ -160,9 +162,7 @@ public class ExternalConfigurationPropertiesProvider implements ConfigurationPro
 		} finally {
 			connection.disconnect();
 		}
-		
-		logger.debug("Exiting >> retrieveDataFromRedis with Reply ID =" + replayId );
-		return replayId;
+		return lastReplayId;
 
 	}
 

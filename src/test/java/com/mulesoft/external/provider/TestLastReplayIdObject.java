@@ -6,7 +6,7 @@
  */
 package com.mulesoft.external.provider;
 
-public class TestObject {
+public class TestLastReplayIdObject {
 
   private String valueFromProperty;
 

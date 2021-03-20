@@ -17,7 +17,7 @@ public class ExternalPropertiesProviderOperationsTestCase extends MuleArtifactFu
 	 */
 
 	static {
-		System.setProperty("env", "test");
+		System.setProperty("env", "functional_test");
 	}
 
 	@Override
@@ -26,17 +26,11 @@ public class ExternalPropertiesProviderOperationsTestCase extends MuleArtifactFu
 	}
 
 	@Inject
-	private TestObject testObject;
-
-	@Inject
-	private TestObject propertyTestObject;
+	private TestLastReplayIdObject assertThatObject;
 
 	@Test
-	public void customPropertyProviderSuccessfullyConfigured() {
-
-		System.out.println("********** propertyTestObject.getValueFromProperty()***********="
-				+ propertyTestObject.getValueFromProperty());
-		 assertThat(testObject.getValueFromProperty(), is("200"));
+	public void testReplayIdExternalSource() {
+		 assertThat(assertThatObject.getValueFromProperty(), is("ray_arnado_external_source_test_only_for_default"));
 
 	}
 

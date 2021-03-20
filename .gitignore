@@ -1,32 +1,7 @@
-.gitignore template
-
-*.class
-
-# Package Files #
-*.jar
-*.war
-*.ear
-
-# Eclipse-specific #
-# ———————————————— #
-.metadata
-bin/**
-tmp/**
-tmp/**/*
-*.tmp
-*.bak
-*.swp
-*~.nib
-.settings/
-.lodpath
-.project
-.classpath
-
-# Studio-specific #
-# ——————————————— #
-reports/
-target/
-.mule/**
-.mule/**.*
-.DS_Store
-velocity.log
+<dependency>
+  <groupId>com.rayarnado.mulesoft.module</groupId>
+  <artifactId>sfreplayid</artifactId>
+  <version>0.0.0</version>
+  <classifier>mule-plugin</classifier>
+</dependency>
+/target/
