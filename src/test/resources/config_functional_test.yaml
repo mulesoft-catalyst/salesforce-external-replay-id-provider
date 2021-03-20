@@ -1,0 +1,8 @@
+sfdc_replay_provider:
+  url: "http://localhost:8081/api"
+  key: "![Y4li8QslP5WBInIRaPq/nfFWvZAlONnQYy+gCWTTbkE=]"
+  secret: "![Y4li8QslP5WBInIRaPq/nfFWvZAlONnQYy+gE2WzHyegI7gYMEcwEQ==]"
+  platform_event_name: "Disbursement_Event__c"
+  ignore_error: "false"
+  default_replay_id: "ray_arnado_external_source_test_only_for_default"  
+  
