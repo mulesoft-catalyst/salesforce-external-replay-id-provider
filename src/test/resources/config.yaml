@@ -1,0 +1,7 @@
+replayIdProvider:
+  url: "https://anypoint.mulesoft.com/mocking/api/v1/links/5f8ab961-e337-4230-a202-cc5726dc865a/replayId/"
+  clientId: "testId"
+  clientSecret: "testSecret"
+  storeName: ""
+  continueOnError: "false"
+  
