@@ -4,7 +4,7 @@
 ### Checkout and Install the module
 
   - Checkout Code
-    - git clone git@github.com:mulesoft-catalyst/salesforce-external-replay-id-provider.git
+    - `git clone git@github.com:mulesoft-catalyst/salesforce-external-replay-id-provider.git`
   - This will locally install to local M2 repository
     - `mvn clean install -DorganizationId=<REPLACE_THIS_WITH_ANYPOINT_ORG_ID>`
   - This will Deploy to your Anypoint Organization
