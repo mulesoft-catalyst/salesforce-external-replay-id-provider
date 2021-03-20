@@ -41,8 +41,8 @@
 | Key                 | Description | Default Value |
 | ------------------- | ------------------------------------------------------------------------------------------------- | ----- |
 | url                 | HTTP URL location to extract the Last Replay ID | |
-| key                 | Client ID and must be ENCRYPTED **(example: `key: "![\<Encrypted Value\>]"`)**  | |
-| secret              | Client Secret and must be ENCRYPTED  **(example: `secret: "![\<Encrypted Value\>]"`)** | |
+| key                 | Client ID and must be ENCRYPTED **(`"![\<Encrypted Value\>]"`)**  | |
+| secret              | Client Secret and must be ENCRYPTED  **(`"![\<Encrypted Value\>]"`)** | |
 | platform_event_name | Platform Event Name | |
 | ignore_error        | Boolean. If encountered an error it will set to default -1 | false |
 | default_replay_id   | (Optional) The value will be set to **${custom-sfdc-property::last_replay_id}** when external return empty| -1 |
