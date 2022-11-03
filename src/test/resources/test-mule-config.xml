@@ -1,0 +1,36 @@
+<mule xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:custom-properties-provider="http://www.mulesoft.org/schema/mule/custom-properties-provider"
+	xmlns:salesforce-last-replay-id="http://www.mulesoft.org/schema/mule/salesforce-last-replay-id"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/salesforce-last-replay-id 
+		http://www.mulesoft.org/schema/mule/salesforce-last-replay-id/current/mule-salesforce-last-replay-id.xsd
+          http://www.mulesoft.org/schema/mule/custom-properties-provider http://www.mulesoft.org/schema/mule/custom-properties-provider/current/mule-custom-properties-provider.xsd">
+
+
+	<!-- Original test config -->
+	<!-- <custom-properties-provider:config name="config" providerEndPointURL="http://localhost:8081/pull" 
+		clientId="[CLIENT ID]" clientSecret="[CLIENT SECRET]" isExternalProvider="true" 
+		/> -->
+
+	<!-- https://anypoint.mulesoft.com/mocking/api/v1/links/5f8ab961-e337-4230-a202-cc5726dc865a/replayId/ -->
+
+
+
+	<salesforce-last-replay-id:config
+		name="my config"
+		file="config_${env}.yaml" key="[TEST KEY]" >
+		<salesforce-last-replay-id:encryption-parameter algorithm="Blowfish" mode="CFB" />
+	</salesforce-last-replay-id:config>
+
+	<object name="assertLastReplayIdObject"
+		class="com.mulesoft.external.provider.TestLastReplayIdObject">
+		<property key="valueFromProperty"
+			value="${custom-sfdc-property::last_replay_id}" />
+	</object>
+
+
+
+
+</mule>
